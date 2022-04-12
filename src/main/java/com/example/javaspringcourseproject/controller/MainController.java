@@ -23,4 +23,5 @@ public class MainController {
         model.addAttribute("foods", foods);
         return "index";
     }
+
 }
