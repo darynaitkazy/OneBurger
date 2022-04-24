@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>#OneBurger - the real burger!</title>
 
@@ -29,6 +29,8 @@
     <link rel = "stylesheet" href = "/css/slick-theme.css">
     <!--Custom css-->
     <link rel = "stylesheet" href = "/css/style.css">
+    <link rel="stylesheet" href="/css/flickity.min.css">
+    <link rel="stylesheet" href="/css/flickity.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 </head>
 
@@ -56,6 +58,14 @@
     <div class = "headeraddress">
         <div class = "headerphonenumbertext" >#phone number</div>
         <div class = "headerphonenumber" ><a href="tel:707-987-1456">+7 (707) 707-70-07</a></div>
+    </div>
+    <div th:if="${#request.userPrincipal}">
+        <a th:href="@{/food/add}">Add product</a>
+    </div>
+    <div th:if="${#request.userPrincipal}">
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out" />
+        </form>
     </div>
 </div>
 
@@ -119,108 +129,116 @@
 </div>
 
 <div class = "blocktitle" id = "sectionCombo">#Combo</div>
-<div class = "block">
+<div class = "main-carousel" data-flickity='{ "groupCells": true }'>
 
-    <div th:each="el : ${foods}">
-        <div class = "cell">
-            <img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-            <h4 th:text="${el.name}"></h4></p>
-            <h6 th:text="${el.description}">Burger, coca-cola and country fries</h6></p>
+    <th:block th:each="food : ${foods}" th:if="${food.type==1}">
+
+        <div class = "carousel-cell">
+            <div th:if="${#request.userPrincipal}">
+                <div class="update-delete">
+                    <a th:href="'/food/' + ${food.id} + '/edit'" class="btn btn-warning">Редактировать</a>
+                    <form method="post" th:action="'/food/' + ${food.id} + '/remove'">
+                        <button class="btn btn-warning" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+
+            <img th:src="@{/images/{filename}(filename = ${food.filename})}" width = "100%" height="250">
+            <h4 th:text="${food.name}"></h4></p>
+            <h6 th:text="${food.description}"></h6></p>
             <div class = "priceandorder">
-                <h4 th:text="${el.price} + '$'"></h4>
+                <h4 th:text="${food.price} + '$'"></h4>
                 <a class= "add-cart cart1" href="#">
-                <button class = "btn btn-outline-dark" >Add to cart</button></a>
+                    <button class = "btn btn-outline-dark" >Add to cart</button></a>
             </div>
         </div>
-    </div>
 
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
 
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/combo1.jpg" alt = "1" width = "214" height = "150">
-        <h4>Combo #1</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">5.99$<a class= "add-cart cart1" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
+    </th:block>
 </div>
 
 
 <div class = "blocktitle" id = "sectionBurger">#Burger</div>
-<div class = "block">
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+<div class = "main-carousel" data-flickity='{ "groupCells": true }'>
 
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+    <th:block th:each="food : ${foods}" th:if="${food.type==2}">
 
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+        <div class = "carousel-cell">
+            <div th:if="${#request.userPrincipal}">
+                <div class="update-delete">
+                    <a th:href="'/food/' + ${food.id} + '/edit'" class="btn btn-warning">Редактировать</a>
+                    <form method="post" th:action="'/food/' + ${food.id} + '/remove'">
+                        <button class="btn btn-warning" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
 
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+            <img th:src="@{/images/{filename}(filename = ${food.filename})}" width = "100%" height="250">
+            <h4 th:text="${food.name}"></h4></p>
+            <h6 th:text="${food.description}"></h6></p>
+            <div class = "priceandorder">
+                <h4 th:text="${food.price} + '$'"></h4>
+                <a class= "add-cart cart1" href="#">
+                    <button class = "btn btn-outline-dark" >Add to cart</button></a>
+            </div>
+        </div>
 
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-    <div class = "cell"><img src = "/images/burger1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#CrabbyPatty</h4></p><h6>buns just out of the oven, lettuce, juicy beef, melted cheese, fresh tomato with onions</h6></p><div class = "priceandorder">3.99$<a class= "add-cart cart2" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-
-
+    </th:block>
 </div>
 
 <div class = "blocktitle" id = "sectionPizza">#Pizza</div>
-<div class = "block">
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+<div class = "main-carousel" data-flickity='{ "groupCells": true }'>
 
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+    <th:block th:each="food : ${foods}" th:if="${food.type==3}">
 
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/pizza1.jpg" alt = "1" width = "214" height = "150">
-        <h4>#Margarita</h4></p><h6>Classic pizza with a lot of cheese, tomato, parmezan and species</h6></p><div class = "priceandorder">4.45$<a class= "add-cart cart3" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+        <div class = "carousel-cell">
+            <div th:if="${#request.userPrincipal}">
+                <div class="update-delete">
+                    <a th:href="'/food/' + ${food.id} + '/edit'" class="btn btn-warning">Редактировать</a>
+                    <form method="post" th:action="'/food/' + ${food.id} + '/remove'">
+                        <button class="btn btn-warning" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+
+            <img th:src="@{/images/{filename}(filename = ${food.filename})}" width = "100%" height="250">
+            <h4 th:text="${food.name}"></h4></p>
+            <h6 th:text="${food.description}"></h6></p>
+            <div class = "priceandorder">
+                <h4 th:text="${food.price} + '$'"></h4>
+                <a class= "add-cart cart1" href="#">
+                    <button class = "btn btn-outline-dark" >Add to cart</button></a>
+            </div>
+        </div>
+
+    </th:block>
 </div>
 <div class = "blocktitle" id = "sectionHotdog">#Hot-dog</div>
-<div class = "block">
-    <div class = "cell"><img src = "/images/hotdog1.jpg" alt = "1" width = "214" height = "150" >
-        <h4>#Mexican</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">2.59$<a class= "add-cart cart4" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/hotdog1.jpg" alt = "1" width = "214" height = "150" >
-        <h4>#Mexican</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">2.59$<a class= "add-cart cart4" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/hotdog1.jpg" alt = "1" width = "214" height = "150" >
-        <h4>#Mexican</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">2.59$<a class= "add-cart cart4" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
-    <div class = "cell"><img src = "/images/hotdog1.jpg" alt = "1" width = "214" height = "150" >
-        <h4>#Mexican</h4></p><h6>Burger, coca-cola and country fries</h6></p><div class = "priceandorder">2.59$<a class= "add-cart cart4" href="#"><button class = "btn btn-outline-dark" >Add to cart</button></a></div></div>
+<div class = "main-carousel" data-flickity='{ "groupCells": true }'>
+
+    <th:block th:each="food : ${foods}" th:if="${food.type==4}">
+
+        <div class = "carousel-cell">
+            <div th:if="${#request.userPrincipal}">
+                <div class="update-delete">
+                    <a th:href="'/food/' + ${food.id} + '/edit'" class="btn btn-warning">Редактировать</a>
+                    <form method="post" th:action="'/food/' + ${food.id} + '/remove'">
+                        <button class="btn btn-warning" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+
+            <img th:src="@{/images/{filename}(filename = ${food.filename})}" width = "100%" height="250">
+            <h4 th:text="${food.name}"></h4></p>
+            <h6 th:text="${food.description}"></h6></p>
+            <div class = "priceandorder">
+                <h4 th:text="${food.price} + '$'"></h4>
+                <a class= "add-cart cart1" href="#">
+                    <button class = "btn btn-outline-dark" >Add to cart</button></a>
+            </div>
+        </div>
+
+    </th:block>
 </div>
 <div class = "blockinfo">
     <div class="blocktitle" id="sectionContacts">#Contacts</div>
@@ -335,7 +353,7 @@
         <script src = "/js/custom.js"></script>
         <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule="" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
-
+        <script src="/js/flickity.pkgd.min.js"></script>
 
 </body>
 </html>
