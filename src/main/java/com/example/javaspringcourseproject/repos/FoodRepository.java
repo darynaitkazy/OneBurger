@@ -2,6 +2,8 @@ package com.example.javaspringcourseproject.repos;
 
 import com.example.javaspringcourseproject.model.Food;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface FoodRepository extends CrudRepository<Food, Integer> {
+@Repository
+public interface FoodRepository extends CrudRepository<Food, Long> {
 }

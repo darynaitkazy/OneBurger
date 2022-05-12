@@ -249,7 +249,7 @@ html {
 .block {
     width: 80%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
     margin: auto;
 }
@@ -278,7 +278,7 @@ h6 {
 .cell {
 
     height: flex;
-    width: 220px;
+    width: 255px;
     color: black;
     text-align: left;
     font-size: 10px;
@@ -296,11 +296,22 @@ h6 {
 
 
 .priceandorder {
+    position: absolute;
     color: DarkOrange;
+    bottom: 0;
     font-size: 25px;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+}
+
+.update-delete {
+    display: flex;
+    justify-content: space-between;
+}
+
+.priceandorder h4 {
+    margin-right: 30px;
 }
 
 
